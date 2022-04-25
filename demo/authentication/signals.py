@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User, Group
 from .models import Profile
@@ -15,3 +15,10 @@ def update_profile(sender, instance, created, **kwargs):
     if not created:
         instance.profile.save()
         print('Profile updated')
+
+@receiver(pre_delete, sender=Profile)
+def delete_profile(sender, instance, **kwargs):
+    try:
+        instance.picture.delete(save=False)
+    except:
+        print('No picture to delete')

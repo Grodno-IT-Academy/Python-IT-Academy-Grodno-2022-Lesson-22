@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CreateUserForm
+from .forms import CreateUserForm, UploadPictureForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .decorators import unauthenticated_user, allowed_users, staff_only
@@ -13,9 +13,19 @@ from .models import Profile
 @login_required(login_url='auth:login')
 # @allowed_users(allowed_roles=['customer', 'admin'])
 def profile_page(request, pk):
-    return render(request, 'authentication/profile.html', context={
-        'profile': Profile.objects.get(pk=pk),
-    })
+    profile = Profile.objects.get(pk=pk)
+    if request.method == "POST":
+        form = UploadPictureForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile picture updated')
+        else:
+            messages.error(request, 'Got an error: ' + str(form.error_messages))
+    context = {
+        'profile': profile,
+        'upload_picture_form': UploadPictureForm(instance=profile)
+    }
+    return render(request, 'authentication/profile.html', context=context)
 
 # Create your views here.
 decorators = [login_required(login_url='auth:login'), staff_only]

@@ -137,6 +137,9 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.environ.get('STATIC_ROOT', '/vol/web/static')
 
 MEDIA_URL = '/static/media/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'media',
+]
 MEDIA_ROOT = '/vol/web/media'
 
 
