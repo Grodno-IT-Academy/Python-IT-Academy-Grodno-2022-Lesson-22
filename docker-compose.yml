@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./demo:/app
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS=0.0.0.0
+      - EMAIL_HOST_USER=grodnopythonclassdemo@gmail.com
+      - EMAIL_HOST_PASSWORD=faqcY5-taqses-gofcib
+      - DB_NAME=demo
+      - DB_USER=postgres1
+      - DB_PASSWORD=Jirqez-zijwy0-wyxgin
+      - DB_HOST=database-1.cjm7j4rbvnej.eu-central-1.rds.amazonaws.com
+      - DB_PORT=5432
