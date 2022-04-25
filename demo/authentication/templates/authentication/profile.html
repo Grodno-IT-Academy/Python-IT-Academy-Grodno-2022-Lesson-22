@@ -12,7 +12,15 @@
     <strong>Last Name:</strong>{{ profile.last_name }}
     <br>
     <!-- profile picture -->
-    <strong>Profile Picture:</strong><img src="{{ profile.picture.url }}" alt="Profile Picture" width="100" height="100">
+    <strong>Profile Picture:</strong>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if profile.picture %}
+            <img src="{{ profile.picture.url }}" alt="Profile Picture" width="200" height="200">
+        {% endif %}
+        {{ upload_photo_form }}
+        <input type="submit" value="Upload">
+    </form>
     <br>
     <!-- bio -->
     <strong>Bio:</strong>{{ profile.bio }}

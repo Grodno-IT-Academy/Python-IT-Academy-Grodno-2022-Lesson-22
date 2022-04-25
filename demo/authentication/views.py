@@ -8,13 +8,24 @@ from django.views import generic
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .models import Profile
+from .forms import UploadProfilePictureForm
 
 #profile page
 @login_required(login_url='auth:login')
 # @allowed_users(allowed_roles=['customer', 'admin'])
 def profile_page(request, pk):
+    profile = Profile.objects.get(pk=pk)
+    if request.method == "POST":
+        form = UploadProfilePictureForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            profile.picture = form.cleaned_data.get('picture')
+            profile.save()
+            messages.success(request, 'Profile picture was updated')
+        else:
+            messages.error(request, 'Got an error: ' + str(form.error_messages))
     return render(request, 'authentication/profile.html', context={
-        'profile': Profile.objects.get(pk=pk),
+        'profile': profile,
+        'upload_photo_form': UploadProfilePictureForm(instance=profile)
     })
 
 # Create your views here.
